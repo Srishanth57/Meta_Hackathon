@@ -1,0 +1,61 @@
+name: email-triage-env
+version: "1.0.0"
+description: >
+  A real-world email triage environment where an AI agent reads inbox emails
+  and must classify, prioritize, reply to, archive, or escalate them.
+
+tags:
+  - openenv
+  - email
+  - triage
+  - nlp
+  - real-world
+
+tasks:
+  - id: easy_classify
+    description: Classify 5 emails into correct category (spam/work/personal/newsletter).
+    difficulty: easy
+    max_steps: 10
+    success_threshold: 0.6
+
+  - id: medium_prioritize
+    description: Assign correct priority levels and archive low-priority emails from 6-email inbox.
+    difficulty: medium
+    max_steps: 15
+    success_threshold: 0.6
+
+  - id: hard_triage
+    description: Full triage of 8 emails — classify, prioritize, reply to urgent ones, archive junk.
+    difficulty: hard
+    max_steps: 25
+    success_threshold: 0.6
+
+action_space:
+  type: structured
+  actions:
+    - name: classify
+      values: [spam, work, personal, newsletter]
+    - name: prioritize
+      values: [high, medium, low]
+    - name: reply
+      values: free_text
+    - name: archive
+    - name: escalate
+
+observation_space:
+  fields:
+    - name: emails
+      type: list[Email]
+    - name: inbox_size
+      type: int
+    - name: step
+      type: int
+    - name: message
+      type: str
+
+reward:
+  range: [-0.3, 0.4]
+  step_penalty: -0.01
+  description: Per-step rewards for correct actions; penalties for errors.
+
+license: MIT
